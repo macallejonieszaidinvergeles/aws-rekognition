@@ -89,10 +89,14 @@ main('archivo');
 function uploadToBucket($result) {
     
     // AWS Info
-	$bucketName = 'updatemax';
-	$IAM_KEY = 'ASIAT6ZAKFPLRDWRHEN4';
-	$IAM_SECRET = 'pFHmkTV/6aPq9wMrE4SS2QYk3HHTceM0jTOn3Upy';
-	$TOKEN = 'FwoGZXIvYXdzEEkaDCSi6BO3SYw17Ai7ryLZARgeSGD1lklFhf7DnrkO66g/nbjr23lkPrsMlPUzLBdIk9btZdHp5IX1BKqC/soLZsO1kcO90Pb98aR9dSJ+/8LzLGQMIzMIjOh5p9BO9Qcgr0oOyKcEIt2MYOWpQmLewyOmqxG56FI3x+zPfcLBXv6OQjPkBviMGjhCqB/1OcqokLrA1Lh9oqiTYlTBB+MlXonACqcCUnIM7TnAi1lPrD4RZHiQDCIClsWJ3EFcYPvEjsCUbqNiKvJ5W79GCxi0SRxn9tZAn64oGmps4pXiMbvtHynitC5DISMo/P+MjgYyLV1aax0lCMPJMKe4gSbB5qmU1XCUHZKeGPOcCoQX7eu+6pR7C7LkM5uiuEV0ew==';
+	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+    
+    
+    $bucketName = $_ENV['bucketName'];
+	$IAM_KEY = $_ENV['IAM_KEY'];
+	$IAM_SECRET = $_ENV['IAM_SECRET'];
+	$TOKEN = $_ENV['TOKEN'];
 
 	// Connect to AWS
 	try {
@@ -155,10 +159,14 @@ function uploadToBucket($result) {
 }
 
 function detectFaces($result) {
-    $bucketName = 'updatemax';
-	$IAM_KEY = 'ASIAT6ZAKFPLRDWRHEN4';
-	$IAM_SECRET = 'pFHmkTV/6aPq9wMrE4SS2QYk3HHTceM0jTOn3Upy';
-	$TOKEN = 'FwoGZXIvYXdzEEkaDCSi6BO3SYw17Ai7ryLZARgeSGD1lklFhf7DnrkO66g/nbjr23lkPrsMlPUzLBdIk9btZdHp5IX1BKqC/soLZsO1kcO90Pb98aR9dSJ+/8LzLGQMIzMIjOh5p9BO9Qcgr0oOyKcEIt2MYOWpQmLewyOmqxG56FI3x+zPfcLBXv6OQjPkBviMGjhCqB/1OcqokLrA1Lh9oqiTYlTBB+MlXonACqcCUnIM7TnAi1lPrD4RZHiQDCIClsWJ3EFcYPvEjsCUbqNiKvJ5W79GCxi0SRxn9tZAn64oGmps4pXiMbvtHynitC5DISMo/P+MjgYyLV1aax0lCMPJMKe4gSbB5qmU1XCUHZKeGPOcCoQX7eu+6pR7C7LkM5uiuEV0ew==';
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+    
+    
+    $bucketName = $_ENV['bucketName'];
+	$IAM_KEY = $_ENV['IAM_KEY'];
+	$IAM_SECRET = $_ENV['IAM_SECRET'];
+	$TOKEN = $_ENV['TOKEN'];
 
     $file_Path = $result[0];
 	$key = $result[1];
@@ -237,6 +245,8 @@ function detectFaces($result) {
         echo '<br>Age High ' . $face['AgeRange']['High'];
         echo '<br>Gender ' . $face['Gender']['Value'];
     }
+    
+    // echo json_encode(array($result['FaceDetails']));
 }
 
 // 	muestra el ultimo objeto del bucket
