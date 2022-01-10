@@ -305,7 +305,13 @@ window.onload = function() {
     
     var json = <?php echo json_encode($JsonJS); ?>;
     var jsonParse = JSON.parse(json);
-    console.log(jsonParse);
+    // console.log(jsonParse);
+    
+    // jsonParse.forEach(element => console.log(element));
+    
+//     for (const [key, value] of Object.entries(jsonParse)) {
+//   console.log(key, value);
+// }
     
 
     var c=document.getElementById("myCanvas");
@@ -321,8 +327,15 @@ window.onload = function() {
     
     context.beginPath();
     //multiplicar las coordenadas por ancho y altura de la foto
-    context.rect(0.48962652683258 * width, 0.30748847126961 * height, 0.18888917565346 * width, 0.37117749452591 * height)
-    context.rect(0.3519452214241 * width, 0.39240410923958 * height, 0.16134768724442 * width, 0.34630155563354 * height); 
+    // context.rect(0.48962652683258 * width, 0.30748847126961 * height, 0.18888917565346 * width, 0.37117749452591 * height)
+    // context.rect(0.3519452214241 * width, 0.39240410923958 * height, 0.16134768724442 * width, 0.34630155563354 * height); 
+    
+    for (const [key, value] of Object.entries(jsonParse)) {
+        // console.log(value['BoundingBox']['Left'])
+        context.rect(value['BoundingBox']['Left'] * width, value['BoundingBox']['Top'] * height, value['BoundingBox']['Width'] * width, value['BoundingBox']['Height'] * height)
+    // console.log(key, value);
+}
+
     context.fillStyle = 'transparent';
     //   context.filter = "blur(6px)";
     // context.fillStyle = "black";
