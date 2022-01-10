@@ -247,12 +247,24 @@ function detectFaces($result) {
         echo '<br>';
     }
     
-     $myJson = json_encode($result['FaceDetails']);
+    // define('HOLA', 'hola2');
+    
+    global $myJson;
+    $myJson = json_encode($result['FaceDetails']);
+    
     
     // $url =  "//{$_SERVER['HTTP_HOST']}/PIA/upload/preprocess/preprocess.php";
     // header("Location: https://" . $url);
     
 }
+
+
+
+$JsonJS = $myJson;
+
+// echo "json" . $myJson;
+
+// echo HOLA;
 
 // 	muestra el ultimo objeto del bucket
 // 	try{
@@ -273,15 +285,11 @@ function detectFaces($result) {
 // 	}
     // print_r($result);
     
-    
 ?>
 
 
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-</head>
 <body>
 
 <!--<img src="image_61c34ff30970b.png" id="myImg" />-->
@@ -289,13 +297,15 @@ function detectFaces($result) {
 <canvas id="myCanvas" width="600" height="300" style="border:1px solid #d3d3d3;">
 </canvas>
 
-</body>
 
 
-
-<script type="text/javascript">
+<script>
 
 window.onload = function() {
+    
+    var json = <?php echo json_encode($JsonJS); ?>;
+    var jsonParse = JSON.parse(json);
+    console.log(jsonParse);
     
 
     var c=document.getElementById("myCanvas");
@@ -304,36 +314,29 @@ window.onload = function() {
     ctx.drawImage(img,10,10);  
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
-    
+
+
     var width = img.width;
     var height = img.height;
     
     context.beginPath();
-    context.rect(0.48962652683258 * width, 0.30748847126961 * height, 0.18888917565346 * width, 0.37117749452591 * height); //multiplicar las coordenadas por ancho y altura de la foto
+    //multiplicar las coordenadas por ancho y altura de la foto
+    context.rect(0.48962652683258 * width, 0.30748847126961 * height, 0.18888917565346 * width, 0.37117749452591 * height)
+    context.rect(0.3519452214241 * width, 0.39240410923958 * height, 0.16134768724442 * width, 0.34630155563354 * height); 
     context.fillStyle = 'transparent';
     //   context.filter = "blur(6px)";
     // context.fillStyle = "black";
     context.fill();
+
     context.lineWidth = 2;
     context.strokeStyle = 'black';
     context.stroke();
     
-    
-    var context2 = canvas.getContext('2d');
-    
-    context2.beginPath();
-    context2.rect(0.3519452214241 * width, 0.39240410923958 * height, 0.16134768724442 * width, 0.34630155563354 * height); //multiplicar las coordenadas por ancho y altura de la foto
-    context2.fillStyle = 'transparent';
-    context2.fill();
-    context2.lineWidth = 2;
-    context2.strokeStyle = 'black';
-    
-    context2.stroke();
     
     
 }
 </script>
 
 
-
+</body>
 </html>
