@@ -157,75 +157,90 @@ $JsonJS = $myJson;
 <!DOCTYPE html>
 <html>
 <body>
+    <head>
+        <title>Preprocess</title>
+        <link rel="stylesheet" href="https://unpkg.com/jcrop/dist/jcrop.css">
+        
+        <style type="text/css">
+        .jcrop-widget active {
+           filter: blur(8px);
+           width: 10px !important;
+         }
+        </style>
+    </head>
 
 <!--<img src="image_61c34ff30970b.png" id="myImg" />-->
 
-<canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">
-</canvas>
+<!--<canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">-->
+<!--</canvas>-->
 
+
+
+<script src="https://unpkg.com/jcrop"></script>
 
 
 <script>
-
-window.onload = function() {
-    
-    //quitar las comillas
-    var json = <?php echo json_encode($JsonJS); ?>;
-    var jsonParse = JSON.parse(json);
-    // console.log(jsonParse);
-    
-    // jsonParse.forEach(element => console.log(element));
-    
-//     for (const [key, value] of Object.entries(jsonParse)) {
-//   console.log(key, value);
-// }
-    
-
-    var c=document.getElementById("myCanvas");
-    var ctx=c.getContext("2d");
-    var img=document.getElementById("myImg");  
-    ctx.drawImage(img,10,10);  
-    var canvas = document.getElementById('myCanvas');
-    var context = canvas.getContext('2d');
-    
-    // ancho y alto de la imagen
-    var width = img.width;
-    var height = img.height;
-    
-    context.beginPath();
-    //multiplicar las coordenadas por ancho y altura de la foto
-    // context.rect(0.48962652683258 * width, 0.30748847126961 * height, 0.18888917565346 * width, 0.37117749452591 * height)
-    // context.rect(0.3519452214241 * width, 0.39240410923958 * height, 0.16134768724442 * width, 0.34630155563354 * height); 
-    
-    for (const [key, value] of Object.entries(jsonParse)) {
-        console.log(value)
-        //multiplicar las coordenadas por ancho y altura de la foto
-        context.rect(value['BoundingBox']['Left'] * width, value['BoundingBox']['Top'] * height, value['BoundingBox']['Width'] * width, value['BoundingBox']['Height'] * height)
+    window.onload = function() {
+         
+        var json = <?php echo json_encode($JsonJS); ?>;
+        var jsonParse = JSON.parse(json);
+        console.log(jsonParse)
         
-        // if(value['AgeRange']['High'] < 18){
-        //     context.fillStyle = 'black';
-        //     // context.filter = "blur(3px)";
-        //     // context.fillStyle = "black";
-        // }
-    // console.log(key, value);
-}
+        
+        var img=document.getElementById("myImg"); 
+        var width = img.width;
+        var height = img.height;
+        let rect;
+        
 
-    context.fillStyle = 'transparent';
-    //   context.filter = "blur(6px)";
-    // context.fillStyle = "black";
-    
-    
-    
-    context.fill();
+        const jcrop = Jcrop.attach('myImg', {multi: true});
 
-    context.lineWidth = 2;
-    context.strokeStyle = 'black';
-    context.stroke();
-    
 
+        for (const [key, value] of Object.entries(jsonParse)) {
+            rect = Jcrop.Rect.create(value['BoundingBox']['Left'] * width, value['BoundingBox']['Top'] * height, value['BoundingBox']['Width'] * width, value['BoundingBox']['Height'] * height);
+            jcrop.newWidget(rect, {});     
+            
+        }
+        
+        // jcrop.addClass('blur');
+        
+        var rectangules = document.querySelectorAll('.jcrop-widget');
+        for (var i = 0; i < rectangules.length; i++) {
+            rectangules[i].addEventListener('dblclick', function(event) {
+                    // alert(this.className);
+                    this.style.filter = "blur(2px)";
+                    // this.style.backgroundColor = "black";
+                    this.style.backdropFilter = "blur(3px)";
+                    // this.style.blur = "8px";
+                    // style="backdropFilter: 'blur(0px')"
+                    event.preventDefault();
+                
+            });
+        }
+        
+        // var a = img;
+        // a.href = "/img.png";
+        // a.download = "img.png";
+        // document.body.appendChild(a);
+        // a.click();
+        // document.body.removeChild(a);
+        
+
+        // $('#myImg').Jcrop({
+        //     onSelect: function(c){
+        //         console.log(c);
+        //         console.log(c.x);
+        //         console.log(c.y);
+        //         console.log(c.w);
+        //         console.log(c.h);
+        //     }
+        // })
     
-}
+    }
 </script>
+
+
+
 
 
 </body>
