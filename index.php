@@ -161,13 +161,29 @@ function uploadToBucket($result) {
 		die('Error:' . $e->getMessage());
 	}
 	
-	echo "<h1>se ha subido la foto al bucket</h1>";
-	echo "<a href='preprocess.php'>Preprocess</a>";
-	return true;
+// 	echo "<h1>se ha subido la foto al bucket</h1>";
+// 	echo "<h5>rediccionando.. en 5 seg</h5>";
+// 	echo "<a href='preprocess.php'>Preprocess</a>";
+
+    // sleep(5);
+    // esto es lo mio
+    
+    header('Location: https://informatica.ieszaidinvergeles.org:10025/PIA/upload/preprocess.php');
+	exit;
 	
+	
+// aqui iria otro header , donde iria preprocessAJAX.php con variables de file y 
+// name por url, despues en ese archivo mostrar foto, hacer peticion a ajax al 
+// archivo service, que es el que devuelve las coordenadas, y yasta
+
+// header('Location: https://informatica.ieszaidinvergeles.org:10025/PIA/upload/preprocessAJAX.php');
+// $url = 'https://informatica.ieszaidinvergeles.org:10025/PIA/upload/preprocessAJAX.php';
+// header("Location: " . $url . "?name=" . $key . "&file=" . $file_Path);
+    // exit;
+	return true;
 }
 
-
+   
 	$get_result = $result;
     $_SESSION['result_face'] = $get_result;
 
