@@ -169,7 +169,7 @@ function uploadToBucket($result) {
     // esto es lo mio
     
     header('Location: https://informatica.ieszaidinvergeles.org:10025/PIA/upload/preprocess.php');
-	exit;
+// 	exit;
 	
 	
 // aqui iria otro header , donde iria preprocessAJAX.php con variables de file y 

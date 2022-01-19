@@ -82,7 +82,10 @@ function detectFaces($result) {
 		die('Error:' . $e->getMessage());
 	}
 	
-	echo "<img src ='originales/$key' id='myImg' margin-top='50px'/> ";
+	$img = "<img src ='originales/$key' id='myImg' margin-top='50px'/> ";
+	
+	echo $img;
+	echo "<button id='btRecortar' type='button'>Click Me!</button>";
 	echo "<br/>";
 	
 	// Display info for each detected person
@@ -119,14 +122,41 @@ function detectFaces($result) {
     // return $myJson;
     
     
-    // $url =  "//{$_SERVER['HTTP_HOST']}/PIA/upload/preprocess/preprocess.php";
-    // header("Location: https://" . $url);
+    // paso key a img para verlo mejor
+    
+    global $img;
+    $img = __DIR__ . "/originales/" . $key;
+    
+    // // tamanios
+    
+    // $medidas = getimagesize($img);    //Sacamos la información
+    // $ancho = $medidas[0];              //Ancho
+    // $alto = $medidas[1];
+    
+    // $image1 = imagecreatefromjpeg($img);
+    // $image2 = imagecreatefromjpeg($img);
+    
+    // for ($i = 1; $i <= 30; $i++) {
+    //     imagefilter($image1, IMG_FILTER_GAUSSIAN_BLUR); //apply repeated times
+    // }
+    
+    
+    // imagecopy($image2, $image1, 0.24836446344852 * $ancho, 0.30338725447655 * $alto,
+    // 0.078598655760288 , 0.16759330034256 ,
+    // 0.078598655760288 * 100,0.16759330034256 * 100); //copy area
+    
+    // imagepng($image2, 'fotoBLUR.jpg', 0, PNG_NO_FILTER); //save new file
+    
+    // imagedestroy($image1);
+    // imagedestroy($image2);
+    
+
     
 }
 
 detectFaces($result);
 
-
+$imgg = $img;
 
 $JsonJS = $myJson;
 
@@ -160,21 +190,18 @@ $JsonJS = $myJson;
     <head>
         <title>Preprocess</title>
         <link rel="stylesheet" href="https://unpkg.com/jcrop/dist/jcrop.css">
-        
         <style type="text/css">
-        .jcrop-widget active {
-           filter: blur(8px);
-           width: 10px !important;
-         }
+            .maxi{
+                backdrop-filter: blur(10px);
+            }
         </style>
+        
     </head>
 
 <!--<img src="image_61c34ff30970b.png" id="myImg" />-->
 
 <!--<canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">-->
 <!--</canvas>-->
-
-
 
 <script src="https://unpkg.com/jcrop"></script>
 
@@ -205,18 +232,54 @@ $JsonJS = $myJson;
         // jcrop.addClass('blur');
         
         var rectangules = document.querySelectorAll('.jcrop-widget');
+        // var rectangules = jcrop.crops
         for (var i = 0; i < rectangules.length; i++) {
             rectangules[i].addEventListener('dblclick', function(event) {
+                    // this.className += ' maxi'
                     // alert(this.className);
-                    this.style.filter = "blur(2px)";
+                    // this.style.filter = "blur(2px)";
                     // this.style.backgroundColor = "black";
-                    this.style.backdropFilter = "blur(3px)";
+                    this.style.backdropFilter = "blur(10px)";
+                    // this.
                     // this.style.blur = "8px";
                     // style="backdropFilter: 'blur(0px')"
+                    
+                    
                     event.preventDefault();
                 
             });
+            
+            rectangules[i].addEventListener('contextmenu', function(event) {
+                this.style.backdropFilter = "";
+                this.className = 'jcrop-widget'
+            	event.preventDefault();
+                // alert('Success');
+            });
+
+            jcrop.setOptions({ shade: false });
+            
+           
+            
         }
+        
+        
+        btRecortar = document.getElementById("btRecortar");
+        
+        btRecortar.addEventListener('click', function(event) {
+            // alert("hola");
+                img.then(canvas => {         
+                let image = canvas.toDataURL();
+                let link = document.getElementById('descargar');
+                link.href = image;
+                link.download = 'carputarpantalla.png';
+                });
+            event.preventDefault();
+                
+            });
+        
+            
+            
+    }
         
         // var a = img;
         // a.href = "/img.png";
@@ -236,7 +299,7 @@ $JsonJS = $myJson;
         //     }
         // })
     
-    }
+    
 </script>
 
 
