@@ -84,8 +84,11 @@ function detectFaces($result) {
 	
 	$img = "<img src ='originales/$key' id='myImg' margin-top='50px'/> ";
 	
+	echo "<h1>Foto</h1>";
+	echo "<div id='divFoto'>";
 	echo $img;
-	echo "<button id='btRecortar' type='button'>Click Me!</button>";
+	echo "</div>";
+	echo "<button onclick='takeshot()' id='btnCapturar' type='button'>Recortar Foto</button>";
 	echo "<br/>";
 	
 	// Display info for each detected person
@@ -103,16 +106,18 @@ function detectFaces($result) {
       . 'Landmarks: ' . $result['FaceDetails'][$n]['Landmarks']['X']
       .  PHP_EOL . PHP_EOL;
     }*/
-    foreach($result['FaceDetails'] as $face) {
-        echo '<br>Left ' . $face['BoundingBox']['Left'];
-        echo '<br>Width ' . $face['BoundingBox']['Width'];
-        echo '<br>Height ' . $face['BoundingBox']['Height'];
-        echo '<br>Top ' . $face['BoundingBox']['Top'];
-        echo '<br>Age Low ' . $face['AgeRange']['Low'];
-        echo '<br>Age High ' . $face['AgeRange']['High'];
-        echo '<br>Gender ' . $face['Gender']['Value'];
-        echo '<br>';
-    }
+    
+    
+    // foreach($result['FaceDetails'] as $face) {
+    //     echo '<br>Left ' . $face['BoundingBox']['Left'];
+    //     echo '<br>Width ' . $face['BoundingBox']['Width'];
+    //     echo '<br>Height ' . $face['BoundingBox']['Height'];
+    //     echo '<br>Top ' . $face['BoundingBox']['Top'];
+    //     echo '<br>Age Low ' . $face['AgeRange']['Low'];
+    //     echo '<br>Age High ' . $face['AgeRange']['High'];
+    //     echo '<br>Gender ' . $face['Gender']['Value'];
+    //     echo '<br>';
+    // }
     
     // define('HOLA', 'hola2');
     
@@ -160,26 +165,6 @@ $imgg = $img;
 
 $JsonJS = $myJson;
 
-// echo "json" . $myJson;
-
-// 	muestra el ultimo objeto del bucket
-// 	try{
-//     	$objects = $s3->listObjectsV2([
-//             'Bucket' => $bucketName,
-//         ]);
-        
-//     // foreach ($objects['Contents'] as $object){
-//     //     echo "{$object['Key']}";
-//     // }
-    
-//     //  var_dump($objects['Contents'][sizeof($objects)]['Key']);
-    
-// 	}catch (S3Exception $e) {
-// 		die('Error:' . $e->getMessage());
-// 	} catch (Exception $e) {
-// 		die('Error:' . $e->getMessage());
-// 	}
-    // print_r($result);
 
 ?>
 
@@ -192,9 +177,19 @@ $JsonJS = $myJson;
         <link rel="stylesheet" href="https://unpkg.com/jcrop/dist/jcrop.css">
         <style type="text/css">
             .maxi{
-                backdrop-filter: blur(10px);
+                
+                background-color:rgba(210, 215, 211 ,0.8);
+                filter: blur(4px);
+                -webkit-filter: blur(4px);
+                
+            }
+            #divFoto{
+                width: fit-content;
             }
         </style>
+            <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css" />-->
+           <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
+           
         
     </head>
 
@@ -202,6 +197,13 @@ $JsonJS = $myJson;
 
 <!--<canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">-->
 <!--</canvas>-->
+
+  <div id="output"></div>
+      
+      
+
+
+</body>
 
 <script src="https://unpkg.com/jcrop"></script>
 
@@ -235,16 +237,15 @@ $JsonJS = $myJson;
         // var rectangules = jcrop.crops
         for (var i = 0; i < rectangules.length; i++) {
             rectangules[i].addEventListener('dblclick', function(event) {
-                    // this.className += ' maxi'
+                    this.className += ' maxi'
                     // alert(this.className);
                     // this.style.filter = "blur(2px)";
                     // this.style.backgroundColor = "black";
-                    this.style.backdropFilter = "blur(10px)";
+                    // this.style.backdropFilter = "blur(10px)";
                     // this.
                     // this.style.blur = "8px";
                     // style="backdropFilter: 'blur(0px')"
-                    
-                    
+
                     event.preventDefault();
                 
             });
@@ -256,37 +257,14 @@ $JsonJS = $myJson;
                 // alert('Success');
             });
 
+            // desactiva el blur del fondo
             jcrop.setOptions({ shade: false });
             
-           
-            
+       
         }
         
-        
-        btRecortar = document.getElementById("btRecortar");
-        
-        btRecortar.addEventListener('click', function(event) {
-            // alert("hola");
-                img.then(canvas => {         
-                let image = canvas.toDataURL();
-                let link = document.getElementById('descargar');
-                link.href = image;
-                link.download = 'carputarpantalla.png';
-                });
-            event.preventDefault();
-                
-            });
-        
-            
             
     }
-        
-        // var a = img;
-        // a.href = "/img.png";
-        // a.download = "img.png";
-        // document.body.appendChild(a);
-        // a.click();
-        // document.body.removeChild(a);
         
 
         // $('#myImg').Jcrop({
@@ -302,9 +280,46 @@ $JsonJS = $myJson;
     
 </script>
 
+    <script type="text/javascript">
+
+        // Define the function 
+        // to screenshot the div
+        function takeshot() {
+            let div =document.getElementById('divFoto');
+            
+            // let div =document.getElementsByClassName('jcrop-stage jcrop-image-stage');
+                
+            
+  
+            // Use the html2canvas
+            // function to take a screenshot
+            // and append it
+            // to the output div
+            html2canvas(div,{
+            //  allowTaint: true
+            })
+            .then(
+                function (canvas) {
+                    document
+                    .getElementById('output')
+                    .appendChild(canvas);
+                })
+                
+                
+            // screenshot(yourElement, {
+            //   x: 20, // this are our custom x y properties
+            //   y: 20, 
+            //   width: 150, // final width and height
+            //   height: 150,
+            //   useCORS: true // you can still pass default html2canvas options
+            // }).then(canvas => {
+            //   //do whatever with the canvas
+            // })
+        }
+    </script>
 
 
 
-
-</body>
+    
+</script>
 </html>
