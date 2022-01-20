@@ -89,6 +89,7 @@ function detectFaces($result) {
 	echo $img;
 	echo "</div>";
 	echo "<button onclick='takeshot()' id='btnCapturar' type='button'>Recortar Foto</button>";
+	echo "<a href='javascript:location.reload()'>Reset foto</a>";
 	echo "<br/>";
 	
 	// Display info for each detected person
@@ -131,31 +132,31 @@ function detectFaces($result) {
     
     // paso key a img para verlo mejor
     
-    global $img;
-    $img = __DIR__ . "/originales/" . $key;
+    // global $img;
+    // $img = __DIR__ . "/originales/" . $key;
     
-    // // tamanios
+    // // // tamanios
     
-    $medidas = getimagesize($img);    //Sacamos la información
-    $ancho = $medidas[0];             
-    $alto = $medidas[1];
+    // $medidas = getimagesize($img);    //Sacamos la información
+    // $ancho = $medidas[0];             
+    // $alto = $medidas[1];
     
-    $image1 = imagecreatefromjpeg($img);
-    $image2 = imagecreatefromjpeg($img);
+    // $image1 = imagecreatefromjpeg($img);
+    // $image2 = imagecreatefromjpeg($img);
     
-    for ($i = 1; $i <= 5; $i++) {
-        imagefilter($image1, IMG_FILTER_GAUSSIAN_BLUR); //apply repeated times
-    }
+    // for ($i = 1; $i <= 5; $i++) {
+    //     imagefilter($image1, IMG_FILTER_GAUSSIAN_BLUR); //apply repeated times
+    // }
     
     
-    // echo $img;
-    // echo $image2;
+    // // echo $img;
+    // // echo $image2;
     
-    imagecopy($image2, $image1, 0.59707909822464 * $ancho, 0.19670516252518 * $alto,
-    0.20028042793274 * $ancho , 0.45828658342361 * $alto,
-    0.20028042793274 * 10 , 0.45828658342361 * $alto); //copy area
+    // imagecopy($image2, $image1, 0.59707909822464 * $ancho, 0.19670516252518 * $alto,
+    // 0.20028042793274 * $ancho , 0.45828658342361 * $alto,
+    // 0.20028042793274 * 10 , 0.45828658342361 * $alto); //copy area
     
-    imagepng($image2, 'ABLUR.jpg', 0, PNG_NO_FILTER); //save new file
+    // imagepng($image2, 'ABLUR.jpg', 0, PNG_NO_FILTER); //save new file
     
      
     
@@ -168,7 +169,7 @@ function detectFaces($result) {
 
 detectFaces($result);
 
-$imgg = $img;
+// $imgg = $img;
 
 $JsonJS = $myJson;
 
@@ -187,10 +188,12 @@ $JsonJS = $myJson;
                 
                 
                 background: rgba(210,215,211,0.8);
-                /*background-image: url("fondoBlur2.png");*/
                 opacity:0.7;
                 filter: blur(4px);
                 -webkit-filter: blur(4px);
+                backdrop-filter: grayscale(0);
+                background-image: url("fondoBlur2.png");
+                background-position:center;
                 /*background: radial-gradient(ellipse at top, gray, transparent),*/
                 /*radial-gradient(ellipse at bottom, gray, transparent);*/
                 /*background-color:rgba(210, 215, 211 ,0.4);*/
@@ -212,17 +215,15 @@ $JsonJS = $myJson;
 <!--</canvas>-->
 
   <div id="output"></div>
-      
-      
-
-
+  
 </body>
 
 <script src="https://unpkg.com/jcrop"></script>
 
 
 <script>
-    window.onload = function() {
+
+window.onload = function() {
          
         var json = <?php echo json_encode($JsonJS); ?>;
         var jsonParse = JSON.parse(json);
@@ -237,10 +238,12 @@ $JsonJS = $myJson;
 
         const jcrop = Jcrop.attach('myImg', {multi: true});
         
+        
        
         for (const [key, value] of Object.entries(jsonParse)) {
             rect = Jcrop.Rect.create(value['BoundingBox']['Left'] * width, value['BoundingBox']['Top'] * height, value['BoundingBox']['Width'] * width, value['BoundingBox']['Height'] * height);
-            jcrop.newWidget(rect, {});     
+            jcrop.newWidget(rect, {});    
+            
             
         }
         
@@ -252,8 +255,9 @@ $JsonJS = $myJson;
         
         var rectangules = document.querySelectorAll('.jcrop-widget');
         
-        
         // var rectangules = jcrop.crops
+        
+        
         for (var i = 0; i < rectangules.length; i++) {
             rectangules[i].addEventListener('dblclick', function(event) {
                     this.className += ' maxi'
@@ -277,77 +281,68 @@ $JsonJS = $myJson;
             });
 
             // desactiva el blur del fondo
-            jcrop.setOptions({ shade: false });
-            
-    
+            jcrop.setOptions({ shade: false,});
         }
         
-            
+    // var lineasCuadritos = document.querySelectorAll('.jcrop-widget');
+    // for (var i = 0; i < lineasCuadritos.length; i++) {
+    //     lineasCuadritos[i].style.border =  "red";
+    // }
+        
+}
+
+    
+    
+</script>
+
+<script type="text/javascript">
+    
+    // Define the function 
+    // to screenshot the div
+    function takeshot() {
+        
+    var lineasCuadritos = document.querySelectorAll('.jcrop-widget');
+    for (var i = 0; i < lineasCuadritos.length; i++) {
+        lineasCuadritos[i].style.border =  "red";
     }
         
-
-        // $('#myImg').Jcrop({
-        //     onSelect: function(c){
-        //         console.log(c);
-        //         console.log(c.x);
-        //         console.log(c.y);
-        //         console.log(c.w);
-        //         console.log(c.h);
-        //     }
-        // })
-    
-    
-</script>
-
-    <script type="text/javascript">
-    
-    
-    const jcrop = Jcrop.attach('myImg', {multi: true});
-    jcrop.setOptions({ shade: false,allowSelect: false });
-    
-    
-    // const s = r.normalize();
-    // console.log(r.x,r.w); // --> 110, -100
-    // console.log(s.x,s.w);
-
-        // Define the function 
-        // to screenshot the div
-        function takeshot() {
-            let div =document.getElementById('divFoto');
+        
+        let div =document.getElementById('divFoto');
+        
+        // let div =document.getElementsByClassName('jcrop-stage jcrop-image-stage');
             
-            // let div =document.getElementsByClassName('jcrop-stage jcrop-image-stage');
-                
-            
-  
-            // Use the html2canvas
-            // function to take a screenshot
-            // and append it
-            // to the output div
-            html2canvas(div,{
-            //  allowTaint: true
+        
+
+        // Use the html2canvas
+        // function to take a screenshot
+        // and append it
+        // to the output div
+        html2canvas(div,{
+        //  allowTaint: true
+        })
+        .then(
+            function (canvas) {
+                document
+                .getElementById('output')
+                .appendChild(canvas);
             })
-            .then(
-                function (canvas) {
-                    document
-                    .getElementById('output')
-                    .appendChild(canvas);
-                })
-                
-                
-            // screenshot(yourElement, {
-            //   x: 20, // this are our custom x y properties
-            //   y: 20, 
-            //   width: 150, // final width and height
-            //   height: 150,
-            //   useCORS: true // you can still pass default html2canvas options
-            // }).then(canvas => {
-            //   //do whatever with the canvas
-            // })
-        }
-    </script>
+            
+            
+        // screenshot(yourElement, {
+        //   x: 20, // this are our custom x y properties
+        //   y: 20, 
+        //   width: 150, // final width and height
+        //   height: 150,
+        //   useCORS: true // you can still pass default html2canvas options
+        // }).then(canvas => {
+        //   //do whatever with the canvas
+        // })
+    }
+</script>
 
 
 
     
 </script>
+
 </html>
