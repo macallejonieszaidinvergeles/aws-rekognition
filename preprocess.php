@@ -110,12 +110,14 @@ function detectFaces($result) {
     
     // foreach($result['FaceDetails'] as $face) {
     //     echo '<br>Left ' . $face['BoundingBox']['Left'];
+    //     echo '<br>Top ' . $face['BoundingBox']['Top'];
+        
     //     echo '<br>Width ' . $face['BoundingBox']['Width'];
     //     echo '<br>Height ' . $face['BoundingBox']['Height'];
-    //     echo '<br>Top ' . $face['BoundingBox']['Top'];
-    //     echo '<br>Age Low ' . $face['AgeRange']['Low'];
-    //     echo '<br>Age High ' . $face['AgeRange']['High'];
-    //     echo '<br>Gender ' . $face['Gender']['Value'];
+        
+    //     // echo '<br>Age Low ' . $face['AgeRange']['Low'];
+    //     // echo '<br>Age High ' . $face['AgeRange']['High'];
+    //     // echo '<br>Gender ' . $face['Gender']['Value'];
     //     echo '<br>';
     // }
     
@@ -134,23 +136,28 @@ function detectFaces($result) {
     
     // // tamanios
     
-    // $medidas = getimagesize($img);    //Sacamos la información
-    // $ancho = $medidas[0];              //Ancho
-    // $alto = $medidas[1];
+    $medidas = getimagesize($img);    //Sacamos la información
+    $ancho = $medidas[0];             
+    $alto = $medidas[1];
     
-    // $image1 = imagecreatefromjpeg($img);
-    // $image2 = imagecreatefromjpeg($img);
+    $image1 = imagecreatefromjpeg($img);
+    $image2 = imagecreatefromjpeg($img);
     
-    // for ($i = 1; $i <= 30; $i++) {
-    //     imagefilter($image1, IMG_FILTER_GAUSSIAN_BLUR); //apply repeated times
-    // }
+    for ($i = 1; $i <= 5; $i++) {
+        imagefilter($image1, IMG_FILTER_GAUSSIAN_BLUR); //apply repeated times
+    }
     
     
-    // imagecopy($image2, $image1, 0.24836446344852 * $ancho, 0.30338725447655 * $alto,
-    // 0.078598655760288 , 0.16759330034256 ,
-    // 0.078598655760288 * 100,0.16759330034256 * 100); //copy area
+    // echo $img;
+    // echo $image2;
     
-    // imagepng($image2, 'fotoBLUR.jpg', 0, PNG_NO_FILTER); //save new file
+    imagecopy($image2, $image1, 0.59707909822464 * $ancho, 0.19670516252518 * $alto,
+    0.20028042793274 * $ancho , 0.45828658342361 * $alto,
+    0.20028042793274 * 10 , 0.45828658342361 * $alto); //copy area
+    
+    imagepng($image2, 'ABLUR.jpg', 0, PNG_NO_FILTER); //save new file
+    
+     
     
     // imagedestroy($image1);
     // imagedestroy($image2);
@@ -178,9 +185,15 @@ $JsonJS = $myJson;
         <style type="text/css">
             .maxi{
                 
-                background-color:rgba(210, 215, 211 ,0.8);
+                
+                background: rgba(210,215,211,0.8);
+                /*background-image: url("fondoBlur2.png");*/
+                opacity:0.7;
                 filter: blur(4px);
                 -webkit-filter: blur(4px);
+                /*background: radial-gradient(ellipse at top, gray, transparent),*/
+                /*radial-gradient(ellipse at bottom, gray, transparent);*/
+                /*background-color:rgba(210, 215, 211 ,0.4);*/
                 
             }
             #divFoto{
@@ -223,17 +236,23 @@ $JsonJS = $myJson;
         
 
         const jcrop = Jcrop.attach('myImg', {multi: true});
-
-
+        
+       
         for (const [key, value] of Object.entries(jsonParse)) {
             rect = Jcrop.Rect.create(value['BoundingBox']['Left'] * width, value['BoundingBox']['Top'] * height, value['BoundingBox']['Width'] * width, value['BoundingBox']['Height'] * height);
             jcrop.newWidget(rect, {});     
             
         }
         
-        // jcrop.addClass('blur');
+        var recudritos = document.querySelectorAll('.jcrop-handle ');
+         for (var i = 0; i < recudritos.length; i++) {
+            recudritos[i].style.opacity = 0     
+         }
+        
         
         var rectangules = document.querySelectorAll('.jcrop-widget');
+        
+        
         // var rectangules = jcrop.crops
         for (var i = 0; i < rectangules.length; i++) {
             rectangules[i].addEventListener('dblclick', function(event) {
@@ -260,7 +279,7 @@ $JsonJS = $myJson;
             // desactiva el blur del fondo
             jcrop.setOptions({ shade: false });
             
-       
+    
         }
         
             
@@ -281,6 +300,15 @@ $JsonJS = $myJson;
 </script>
 
     <script type="text/javascript">
+    
+    
+    const jcrop = Jcrop.attach('myImg', {multi: true});
+    jcrop.setOptions({ shade: false,allowSelect: false });
+    
+    
+    // const s = r.normalize();
+    // console.log(r.x,r.w); // --> 110, -100
+    // console.log(s.x,s.w);
 
         // Define the function 
         // to screenshot the div
