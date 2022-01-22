@@ -192,6 +192,10 @@ $JsonJS = $myJson;
                 background-image: url("fondoBlur2.png");
                 background-position:center;
                 opacity:0.85;
+                
+            /*otra opcion*/
+                /*background: black;*/
+                /*opacity: 0.75 !important;*/
             }
             #divFoto{
                 width: fit-content;
@@ -296,12 +300,14 @@ window.onload = function() {
     
 </script>
 
+
 <script type="text/javascript">
     
     // Define the function 
     // to screenshot the div
     function takeshot() {
         
+    // una vez procesada la imagen, quita los bordes de la imagen
     var lineasCuadritos = document.querySelectorAll('.jcrop-widget');
     for (var i = 0; i < lineasCuadritos.length; i++) {
         lineasCuadritos[i].style.border =  "transparent";
