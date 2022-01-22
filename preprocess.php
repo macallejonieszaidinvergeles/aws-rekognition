@@ -28,9 +28,9 @@ function detectFaces($result) {
     
     
     $bucketName = $_ENV['bucketName'];
-	$IAM_KEY = $_ENV['IAM_KEY'];
-	$IAM_SECRET = $_ENV['IAM_SECRET'];
-	$TOKEN = $_ENV['TOKEN'];
+	$IAM_KEY = $_ENV['aws_access_key_id'];
+	$IAM_SECRET = $_ENV['aws_secret_access_key'];
+	$TOKEN = $_ENV['aws_session_token'];
 
     $file_Path = $result[0];
 	$key = $result[1];
@@ -185,19 +185,13 @@ $JsonJS = $myJson;
         <link rel="stylesheet" href="https://unpkg.com/jcrop/dist/jcrop.css">
         <style type="text/css">
             .maxi{
-                
-                
-                background: rgba(210,215,211,0.8);
-                opacity:0.7;
-                filter: blur(4px);
-                -webkit-filter: blur(4px);
-                backdrop-filter: grayscale(0);
+                /*background: rgba(210,215,211,0.8);*/
+                /*filter: blur(4px);*/
+                /*-webkit-filter: blur(4px);*/
+                /*backdrop-filter: grayscale(0);*/
                 background-image: url("fondoBlur2.png");
                 background-position:center;
-                /*background: radial-gradient(ellipse at top, gray, transparent),*/
-                /*radial-gradient(ellipse at bottom, gray, transparent);*/
-                /*background-color:rgba(210, 215, 211 ,0.4);*/
-                
+                opacity:0.85;
             }
             #divFoto{
                 width: fit-content;
@@ -239,7 +233,6 @@ window.onload = function() {
         const jcrop = Jcrop.attach('myImg', {multi: true});
         
         
-       
         for (const [key, value] of Object.entries(jsonParse)) {
             rect = Jcrop.Rect.create(value['BoundingBox']['Left'] * width, value['BoundingBox']['Top'] * height, value['BoundingBox']['Width'] * width, value['BoundingBox']['Height'] * height);
             jcrop.newWidget(rect, {});    
@@ -247,42 +240,50 @@ window.onload = function() {
             
         }
         
-        var recudritos = document.querySelectorAll('.jcrop-handle ');
-         for (var i = 0; i < recudritos.length; i++) {
-            recudritos[i].style.opacity = 0     
-         }
+        jcrop.listen('crop.change', (widget, event) => {
+        
+       
+            // los pequeños recuadros que tiene el que seleccionas 
+            var recudritos = document.querySelectorAll('.jcrop-handle ');
+             for (var i = 0; i < recudritos.length; i++) {
+                recudritos[i].style.opacity = 0     
+             }
         
         
-        var rectangules = document.querySelectorAll('.jcrop-widget');
         
-        // var rectangules = jcrop.crops
+            var rectangules = document.querySelectorAll('.jcrop-widget');    
         
-        
-        for (var i = 0; i < rectangules.length; i++) {
-            rectangules[i].addEventListener('dblclick', function(event) {
-                    this.className += ' maxi'
-                    // alert(this.className);
-                    // this.style.filter = "blur(2px)";
-                    // this.style.backgroundColor = "black";
-                    // this.style.backdropFilter = "blur(10px)";
-                    // this.
-                    // this.style.blur = "8px";
-                    // style="backdropFilter: 'blur(0px')"
 
-                    event.preventDefault();
+            for (var i = 0; i < rectangules.length; i++) {
+                rectangules[i].addEventListener('dblclick', function(event) {
+                        this.className += ' maxi'
+                        // alert(this.className);
+                        // this.style.filter = "blur(2px)";
+                        // this.style.backgroundColor = "black";
+                        // this.style.backdropFilter = "blur(10px)";
+                        // this.
+                        // this.style.blur = "8px";
+                        // style="backdropFilter: 'blur(0px')"
+    
+                        event.preventDefault();
+                    
+                });
                 
-            });
-            
-            rectangules[i].addEventListener('contextmenu', function(event) {
-                this.style.backdropFilter = "";
-                this.className = 'jcrop-widget'
-            	event.preventDefault();
-                // alert('Success');
-            });
-
-            // desactiva el blur del fondo
+                rectangules[i].addEventListener('contextmenu', function(event) {
+                    this.style.backdropFilter = "";
+                    this.className = 'jcrop-widget'
+                	event.preventDefault();
+                    // alert('Success');
+                });
+    
+                // desactiva el blur del fondo
+                
+            }
             jcrop.setOptions({ shade: false,});
-        }
+        
+        });
+        
+        jcrop.setOptions({ shade: false,});
         
     // var lineasCuadritos = document.querySelectorAll('.jcrop-widget');
     // for (var i = 0; i < lineasCuadritos.length; i++) {
@@ -303,7 +304,7 @@ window.onload = function() {
         
     var lineasCuadritos = document.querySelectorAll('.jcrop-widget');
     for (var i = 0; i < lineasCuadritos.length; i++) {
-        lineasCuadritos[i].style.border =  "red";
+        lineasCuadritos[i].style.border =  "transparent";
     }
         
         
