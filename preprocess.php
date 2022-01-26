@@ -18,7 +18,14 @@ use Aws\S3\Exception\S3Exception;
 use Aws\Rekognition\RekognitionClient;
 
 
-$result = $_SESSION['result_face'];
+$result;
+
+
+if(isset($_SESSION['result_face'])){
+    $result = $_SESSION['result_face'];
+}else{
+    header('Location: https://informatica.ieszaidinvergeles.org:10025/PIA/upload/');
+}
 
 
 function detectFaces($result) {
